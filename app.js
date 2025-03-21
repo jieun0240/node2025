@@ -16,6 +16,10 @@ app.post('/swag', (req, res) => {
   res.send(req.body);
 });
 
+app.post('/swag/:person', (req, res) => {
+  res.send(req.params.person);
+});
+
 
 // 서버 실행 (2007번 포트에서 요청을 받음)
 app.listen(port, () => {
