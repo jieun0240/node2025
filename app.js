@@ -5,13 +5,15 @@ const express = require('express');
 const app = express();
 const port = 2007;
 
+app.use(express.json())
+
 // 기본 라우트 설정
 app.get('/swag', (req, res) => {
   res.send('get swag');
 });
 
 app.post('/swag', (req, res) => {
-  res.send('post swag');
+  res.send(req.body);
 });
 
 
