@@ -1,24 +1,13 @@
 // Express 모듈 불러오기
 const express = require('express');
+const swagRouter = require('./routes/swag')
 
 // Express 애플리케이션 생성
 const app = express();
 const port = 2007;
 
 app.use(express.json())
-
-// 기본 라우트 설정
-app.get('/swag', (req, res) => {
-  res.send('get swag');
-});
-
-app.post('/swag', (req, res) => {
-  res.send(req.body);
-});
-
-app.post('/swag/:person', (req, res) => {
-  res.send(req.params.person);
-});
+app.use('/swag', swagRouter)
 
 
 // 서버 실행 (2007번 포트에서 요청을 받음)
