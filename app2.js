@@ -28,10 +28,17 @@ app.set('view engine', 'ejs');
 // path.join을 사용하여 운영체제의 맞추어 경로 지정자를 설정
 app.set('views', path.join(__dirname, 'views'));
 
-const travelList = ['뉴욕', '파리', '우리집', '도쿄'];
-
 app.get('/travel', (req, res) => {
-    res.render('travel', {travelList});
+    const _query = 'SELECT * FROM travellist';
+    db.query(_query, (err, results) => {
+        if(err) {
+            console.error('데이터베이스 쿼리 실패', err);
+            res.status(500).send('Internal Server Error');
+            return;
+        }
+        const travelList = results;
+        res.render('travel', {travelList});
+    });
 });
 
 app.listen(port, () => {
