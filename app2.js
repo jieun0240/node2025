@@ -71,12 +71,29 @@ app.post('/travel', (req, res) => {
         if (err) {
             console.error('데이터베이스 쿼리 실패 : ', err);
             res.status(500).send('Internal Server Error');
-            return;
+            return; 
         }
         res.redirect('/travel');
     });
 });
 
+app.get('/add-travel', (req, res) => {
+    res.render('addTravel');
+});
+
+app.put('/travel/:id', (req, res) => {
+    const travelId = req.params.id;
+    const {name} = req.body;
+    const _query = 'UPDATE travellist SET name = ? WHERE id = ?';
+    db.query(_query, [name, travelId], (err, results) => {
+        if (err) {
+            console.error('데이터베이스 쿼리 실패 : ', err);
+            res.status(500).send('Internal Server Error');
+            return;
+        }
+        res.render('updateSuccess');
+    });
+});
 
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}/`);
