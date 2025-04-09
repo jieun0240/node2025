@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const mysql = require('mysql2');
 const dotenv = require('dotenv');
+const methodOverride = require('method-override');
 dotenv.config();
 
 const app = express();
@@ -15,6 +16,7 @@ const db = mysql.createConnection({
     port: process.env.DB_PORT
 });
 
+
 db.connect(err => {
     if (err) {
         console.error('MySQL 연결 실패 : ', err);
@@ -23,6 +25,8 @@ db.connect(err => {
     console.log('MySQL 연결 성공!!');
 });
 
+
+app.use(methodOverride('_method'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -64,6 +68,7 @@ app.get('/travel/:id', (req, res) => {
     });
 });
 
+
 app.post('/travel', (req, res) => {
     const { name } = req.body;
     const _query = 'INSERT INTO travellist (name) VALUES (?)';
@@ -77,9 +82,11 @@ app.post('/travel', (req, res) => {
     });
 });
 
+
 app.get('/add-travel', (req, res) => {
     res.render('addTravel');
 });
+
 
 app.put('/travel/:id', (req, res) => {
     const travelId = req.params.id;
@@ -94,6 +101,22 @@ app.put('/travel/:id', (req, res) => {
         res.render('updateSuccess');
     });
 });
+
+
+app.get('/travel/:id/edit', (req, res) => {
+    const travelId = req.params.id;
+    const _query = 'SELECT * FROM travellist WHERE id = ?';
+    db.query(_query, [travelId], (err, results) => {
+        if (err) {
+            console.error('데이터베이스 쿼리 실패 : ', err);
+            res.status(500).send('Internal Server Error');
+            return;
+        }
+        const travel = results[0];
+        res.render('editTravel', { travel });
+    });
+});
+
 
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}/`);
