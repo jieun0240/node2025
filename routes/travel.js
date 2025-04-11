@@ -15,13 +15,16 @@ module.exports = (db) => {
     });
 
     router.post('/', (req, res) => {
-        const { name } = req.body;
-        const _query = 'INSERT INTO travellist (name) VALUES (?)';
-        db.query(_query, [name], (err) => {
-            if (err) return res.status(500).send('Internal Server Error');
-            res.redirect('/travel');
-        });
+    const { name } = req.body;
+    const _query = 'INSERT INTO travellist (name) VALUES (?)';
+    db.query(_query, [name], (err) => {
+        if (err) {
+            console.error('쿼리 실패', err);
+            return res.status(500).send('Internal Server Error');
+        }
+        res.redirect('/travel');
     });
+});
 
     router.get('/:id', (req, res) => {
         const travelId = req.params.id;
