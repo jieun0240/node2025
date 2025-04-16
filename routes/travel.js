@@ -1,20 +1,21 @@
 const express = require('express');
 const router = express.Router();
+const db = require('../db');
 
-module.exports = (db) => {
-    router.get('/', (req, res) => {
-        const _query = 'SELECT * FROM travellist';
-        db.query(_query, (err, results) => {
-            if (err) return res.status(500).send('Internal Server Error');
-            res.render('travel', { travelList: results });
-        });
+
+router.get('/', (req, res) => {
+    const _query = 'SELECT * FROM travellist';
+    db.query(_query, (err, results) => {
+        if (err) return res.status(500).send('Internal Server Error');
+        res.render('travel', { travelList: results });
     });
+});
 
-    router.get('/add', (req, res) => {
-        res.render('addTravel');
-    });
+router.get('/add', (req, res) => {
+    res.render('addTravel');
+});
 
-    router.post('/', (req, res) => {
+router.post('/', (req, res) => {
     const { name } = req.body;
     const _query = 'INSERT INTO travellist (name) VALUES (?)';
     db.query(_query, [name], (err) => {
@@ -26,42 +27,41 @@ module.exports = (db) => {
     });
 });
 
-    router.get('/:id', (req, res) => {
-        const travelId = req.params.id;
-        const _query = 'SELECT * FROM travellist WHERE id = ?';
-        db.query(_query, [travelId], (err, results) => {
-            if (err) return res.status(500).send('Internal Server Error');
-            res.render('travelDetail', { travel: results[0] });
-        });
+router.get('/:id', (req, res) => {
+    const travelId = req.params.id;
+    const _query = 'SELECT * FROM travellist WHERE id = ?';
+    db.query(_query, [travelId], (err, results) => {
+        if (err) return res.status(500).send('Internal Server Error');
+        res.render('travelDetail', { travel: results[0] });
     });
+});
 
-    router.get('/:id/edit', (req, res) => {
-        const travelId = req.params.id;
-        const _query = 'SELECT * FROM travellist WHERE id = ?';
-        db.query(_query, [travelId], (err, results) => {
-            if (err) return res.status(500).send('Internal Server Error');
-            res.render('editTravel', { travel: results[0] });
-        });
+router.get('/:id/edit', (req, res) => {
+    const travelId = req.params.id;
+    const _query = 'SELECT * FROM travellist WHERE id = ?';
+    db.query(_query, [travelId], (err, results) => {
+        if (err) return res.status(500).send('Internal Server Error');
+        res.render('editTravel', { travel: results[0] });
     });
+});
 
-    router.put('/:id', (req, res) => {
-        const travelId = req.params.id;
-        const { name } = req.body;
-        const _query = 'UPDATE travellist SET name = ? WHERE id = ?';
-        db.query(_query, [name, travelId], (err) => {
-            if (err) return res.status(500).send('Internal Server Error');
-            res.render('updateSuccess');
-        });
+router.put('/:id', (req, res) => {
+    const travelId = req.params.id;
+    const { name } = req.body;
+    const _query = 'UPDATE travellist SET name = ? WHERE id = ?';
+    db.query(_query, [name, travelId], (err) => {
+        if (err) return res.status(500).send('Internal Server Error');
+        res.render('updateSuccess');
     });
+});
 
-    router.delete('/:id', (req, res) => {
-        const travelId = req.params.id;
-        const _query = 'DELETE FROM travellist WHERE id = ?';
-        db.query(_query, [travelId], (err) => {
-            if (err) return res.status(500).send('Internal Server Error');
-            res.render('deleteSuccess');
-        });
+router.delete('/:id', (req, res) => {
+    const travelId = req.params.id;
+    const _query = 'DELETE FROM travellist WHERE id = ?';
+    db.query(_query, [travelId], (err) => {
+        if (err) return res.status(500).send('Internal Server Error');
+        res.render('deleteSuccess');
     });
+});
 
-    return router;
-};
+module.exports = router;
