@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const methodOverride = require('method-override');
+const travelRoutes = require('./routes/travel');
 
 const app = express();
 const port = 2007;
